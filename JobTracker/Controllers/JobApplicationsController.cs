@@ -1,4 +1,5 @@
 ﻿using JobTracker.Data;
+using JobTracker.DTOs;
 using JobTracker.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,25 +18,31 @@ namespace JobTracker.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var applications = _context.JobApplications.ToList();
+            var applications = await _context.JobApplications.ToListAsync();
 
             return Ok(applications);
         }
         [HttpPost]
-        public IActionResult Create(JobApplication application)
+        public async Task<IActionResult> Create(CreateJobApplicationDTO dto)
         {
+            var application = new JobApplication
+            {
+                CompanyName = dto.CompanyName,
+                JobTitle = dto.JobTitle,
+                Status = dto.Status
+            };
             _context.JobApplications.Add(application);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetById), new { id = application.Id }, application);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var application = _context.JobApplications.Find(id);
+            var application = await _context.JobApplications.FindAsync(id);
 
             if (application == null)
             {
