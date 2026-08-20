@@ -23,7 +23,7 @@ namespace JobTracker.Services
             return await _context.JobApplications.FindAsync(id);
         }
 
-        public async Task<JobApplication> CreateAsync(CreateJobApplicationDto dto)
+        public async Task<JobApplication> CreateAsync(CreateJobApplicationDTO dto)
         {
             var application = new JobApplication
             {
@@ -39,9 +39,7 @@ namespace JobTracker.Services
             return application;
         }
 
-        public async Task<bool> UpdateAsync(
-           int id,
-           UpdateJobApplicationDto dto)
+        public async Task<bool> UpdateAsync(int id, UpdateJobApplicationDTO dto)
         {
             var application = await _context.JobApplications.FindAsync(id);
 

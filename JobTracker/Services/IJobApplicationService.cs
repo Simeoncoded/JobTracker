@@ -9,7 +9,7 @@ namespace JobTracker.Services
         Task<List<JobApplication>> GetAllAsync();
         Task<JobApplication?> GetByIdAsync(int id);
         Task<JobApplication> CreateAsync(CreateJobApplicationDTO dto);
-        Task<JobApplication> UpdateAsync(int id, UpdateJobApplicationDTO dto);
+        Task<bool> UpdateAsync(int id, UpdateJobApplicationDTO dto);
         Task<bool> DeleteAsync(int id);
     }
 }

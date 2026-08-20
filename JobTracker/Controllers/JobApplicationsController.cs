@@ -1,6 +1,7 @@
 ﻿using JobTracker.Data;
 using JobTracker.DTOs;
 using JobTracker.Models;
+using JobTracker.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,17 +11,17 @@ namespace JobTracker.Controllers
     [ApiController]
     public class JobApplicationsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IJobApplicationService _service;   
 
-        public JobApplicationsController(ApplicationDbContext context)
+        public JobApplicationsController(IJobApplicationService service)
         {
-            _context = context;
+            _service = service;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var applications = await _context.JobApplications.ToListAsync();
+            var applications = await _service.GetAllAsync();
 
             return Ok(applications);
         }
@@ -28,7 +29,7 @@ namespace JobTracker.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var application = await _context.JobApplications.FindAsync(id);
+            var application = await _service.GetByIdAsync(id);
 
             if (application == null)
             {
@@ -41,14 +42,7 @@ namespace JobTracker.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateJobApplicationDTO dto)
         {
-            var application = new JobApplication
-            {
-                CompanyName = dto.CompanyName,
-                JobTitle = dto.JobTitle,
-                Status = dto.Status
-            };
-            _context.JobApplications.Add(application);
-            await _context.SaveChangesAsync();
+            var application = await _service.CreateAsync(dto);
 
             return CreatedAtAction(nameof(GetById), new { id = application.Id }, application);
         }
@@ -57,36 +51,27 @@ namespace JobTracker.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, UpdateJobApplicationDTO dto)
         {
-            var application = await _context.JobApplications.FindAsync(id);
+            var updated = await _service.UpdateAsync(id, dto);
 
-            if(application == null)
+            if(!updated)
             {
                 return NotFound();
             }
 
-            application.CompanyName = dto.CompanyName;
-            application.JobTitle = dto.JobTitle;
-            application.Status = dto.Status;
-
-            await _context.SaveChangesAsync();
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var application = await _context.JobApplications.FindAsync(id);
+            var deleted = await _service.DeleteAsync(id);
 
-            if(application == null)
+            if(!deleted)
             {
                 return NotFound();
             }
 
-            _context.JobApplications.Remove(application);
-            await _context.SaveChangesAsync();
             return NoContent();
-        }
-
-       
+        }       
     }
 }

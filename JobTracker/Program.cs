@@ -1,5 +1,6 @@
 using JobTracker.Data;
 using JobTracker.Exceptions;
+using JobTracker.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +18,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<IJobApplicationService, JobApplicationService>();
 
 var app = builder.Build();
 
