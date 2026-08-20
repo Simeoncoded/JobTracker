@@ -24,6 +24,20 @@ namespace JobTracker.Controllers
 
             return Ok(applications);
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var application = await _context.JobApplications.FindAsync(id);
+
+            if (application == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(application);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create(CreateJobApplicationDTO dto)
         {
@@ -39,18 +53,6 @@ namespace JobTracker.Controllers
             return CreatedAtAction(nameof(GetById), new { id = application.Id }, application);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
-        {
-            var application = await _context.JobApplications.FindAsync(id);
-
-            if (application == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(application);
-        }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, UpdateJobApplicationDTO dto)
