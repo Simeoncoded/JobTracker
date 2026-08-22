@@ -5,8 +5,7 @@ namespace JobTracker.DTOs
     public class CreateJobApplicationDTO
     {
         [Required]
-        [MaxLength(100)]
-        public string CompanyName { get; set; } = string.Empty;
+        public int CompanyId { get; set; }
 
         [Required]
         [MaxLength(100)]
@@ -15,5 +14,18 @@ namespace JobTracker.DTOs
         [Required]
         [MaxLength(50)]
         public string Status { get; set; } = string.Empty;
+
+        [Required]
+        public DateOnly AppliedDate { get; set; }
+
+        [MaxLength(500)]
+        public string? JobUrl { get; set; }
+
+        [MaxLength(100)]
+        public string? Location { get; set; }
+
+        public decimal? Salary { get; set; }
+
+        public string? Notes { get; set; }
     }
 }

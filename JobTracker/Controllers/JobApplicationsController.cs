@@ -44,7 +44,18 @@ namespace JobTracker.Controllers
         {
             var application = await _service.CreateAsync(dto);
 
-            return CreatedAtAction(nameof(GetById), new { id = application.Id }, application);
+            if (application == null)
+            {
+                return BadRequest(new
+                {
+                    message = "The specified company does not exist."
+                });
+            }
+
+            return CreatedAtAction(
+                nameof(GetById),
+                new { id = application.Id },
+                application);
         }
 
 

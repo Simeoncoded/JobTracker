@@ -1,27 +1,21 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace JobTracker.DTOs
+﻿namespace JobTracker.DTOs
 {
-    public class UpdateJobApplicationDTO
+    public class JobApplicationResponseDTO
     {
-        [Required]
+        public int Id { get; set; }
+
         public int CompanyId { get; set; }
 
-        [Required]
-        [MaxLength(100)]
+        public string CompanyName { get; set; } = string.Empty;
+
         public string JobTitle { get; set; } = string.Empty;
 
-        [Required]
-        [MaxLength(50)]
         public string Status { get; set; } = string.Empty;
 
-        [Required]
         public DateOnly AppliedDate { get; set; }
 
-        [MaxLength(500)]
         public string? JobUrl { get; set; }
 
-        [MaxLength(100)]
         public string? Location { get; set; }
 
         public decimal? Salary { get; set; }
