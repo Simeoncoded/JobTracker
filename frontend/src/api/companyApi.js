@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5152/api"
+const API_URL = import.meta.env.VITE_API_URL
 
 export async function getCompanies() {
   console.log("Calling API...")
