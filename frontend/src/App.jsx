@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar"
 import ApplicationForm from "../components/ApplicationForm"
 import { getCompanies } from "./api/companyApi";
 import { getJobApplications } from "./api/jobApplicationApi";
+import ApplicationList from "../components/ApplicationList";
 
 function App() {
   const [companies, setCompanies] = useState([]);
@@ -42,15 +43,7 @@ function App() {
         ))}
       </ul>
 
-      <h2>Applications</h2>
-
-      <ul>
-        {applications.map((application) => (
-          <li key={application.id}>
-            {application.jobTitle} - {application.companyName}
-          </li>
-        ))}
-      </ul>
+      <ApplicationList applications={applications} />
 
     </div>
   )
