@@ -9,3 +9,19 @@ export async function getJobApplications() {
 
   return await response.json()
 }
+
+export async function createJobApplications(){
+  const response = await fetch(`${API_URL}/JobApplications`,{
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(application),
+  })
+
+  if(!response.ok){
+    throw new Error("Failed to create job application")
+  }
+
+  return await response.json()
+}
