@@ -31,7 +31,7 @@ function App() {
     <div>
       <Navbar title="JobTracker" />
 
-      <ApplicationForm />
+      <ApplicationForm companies={companies}/>
 
       <h2>Companies</h2>
 
