@@ -1,10 +1,6 @@
 import { useState } from "react"
 
 function ApplicationForm({ companies }) {
-  const [jobTitle, setJobTitle] = useState("")
-  const [companyId, setCompanyId] = useState("")
-  const [status, setStatus] = useState("Applied")
-
   const [formData, setFormData] = useState({
     companyId: "",
     jobTitle: "",
@@ -24,32 +20,22 @@ function ApplicationForm({ companies }) {
       [name]: value
     })
   }
+  
   const handleSubmit = (event) => {
     event.preventDefault()
   
-    console.log("Company ID:", companyId)
-    console.log("Job Title:", jobTitle)
-    console.log("Status:", status)
+    console.log("Form Data:", formData)
   }
 
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        <label>Company ID</label>
-        <input
-          type="number"
-          name="companyId"
-          value={formData.companyId}
-          onChange={handleChange}
-        />
-      </div>
-
-      <div>
         <label>Company</label>
 
         <select
-          value={companyId}
-          onChange={(event) => setCompanyId(event.target.value)}>
+        name="companyId"
+          value={formData.companyId}
+          onChange={handleChange}>
           <option value="">Select a company</option>
 
           {companies.map((company) => (
@@ -65,8 +51,9 @@ function ApplicationForm({ companies }) {
 
         <input
           type="text"
-          value={jobTitle}
-          onChange={(event) => setJobTitle(event.target.value)}
+          name = "jobTitle"
+          value={formData.jobTitle}
+          onChange={handleChange}
           placeholder="e.g. Software Developer"
         />
       </div>
@@ -74,8 +61,9 @@ function ApplicationForm({ companies }) {
         <label>Status</label>
 
         <select
-          value={status}
-          onChange={(event) => setStatus(event.target.value)}
+        name="status"
+          value={formData.status}
+          onChange={handleChange}
         >
           <option value="Applied">Applied</option>
           <option value="Interview">Interview</option>
@@ -86,6 +74,7 @@ function ApplicationForm({ companies }) {
 
       <div>
         <label>Applied Date</label>
+
         <input
           type="date"
           name="appliedDate"
@@ -101,7 +90,7 @@ function ApplicationForm({ companies }) {
           name="jobUrl"
           value={formData.jobUrl}
           onChange={handleChange}
-          placeholder="https://..."
+          placeholder="https://example.com/job"
         />
       </div>
 
