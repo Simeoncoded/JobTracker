@@ -3,6 +3,7 @@ import { useState } from "react"
 function ApplicationForm({ companies }) {
   const [jobTitle, setJobTitle] = useState("")
   const [companyId, setCompanyId] = useState("")
+  const [status, setStatus] = useState("Applied")
 
   const [formData, setFormData] = useState({
     companyId: "",
@@ -25,8 +26,10 @@ function ApplicationForm({ companies }) {
   }
   const handleSubmit = (event) => {
     event.preventDefault()
-
-    console.log(formData)
+  
+    console.log("Company ID:", companyId)
+    console.log("Job Title:", jobTitle)
+    console.log("Status:", status)
   }
 
   return (
@@ -69,13 +72,16 @@ function ApplicationForm({ companies }) {
       </div>
       <div>
         <label>Status</label>
-        <input
-          type="text"
-          name="status"
-          value={formData.status}
-          onChange={handleChange}
-          placeholder="e.g. Applied"
-        />
+
+        <select
+          value={status}
+          onChange={(event) => setStatus(event.target.value)}
+        >
+          <option value="Applied">Applied</option>
+          <option value="Interview">Interview</option>
+          <option value="Rejected">Rejected</option>
+          <option value="Offer">Offer</option>
+        </select>
       </div>
 
       <div>
