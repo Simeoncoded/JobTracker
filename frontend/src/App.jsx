@@ -44,6 +44,7 @@ function App() {
 
       <ApplicationForm companies={companies} onApplicationCreated= {loadApplications} />
 
+
       <h2>Companies</h2>
 
       <ul>
@@ -54,7 +55,7 @@ function App() {
         ))}
       </ul>
 
-      <ApplicationList applications={applications} />
+      <ApplicationList applications={applications} onApplicationDeleted = {loadApplications}/>
 
     </div>
   )

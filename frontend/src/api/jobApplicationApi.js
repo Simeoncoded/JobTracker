@@ -25,3 +25,32 @@ export async function createJobApplications(application){
 
   return await response.json()
 }
+
+export async function updateJobApplications(application, id){
+  const response = await fetch(`${API_URL}/JobApplications/${id}`,{
+    method :"PUT",
+    headers:{
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(application)
+  })
+
+  if(!response.ok){
+    throw new Error("Failed to update job application")
+  }
+}
+
+export async function deleteJobApplications(id){
+  console.log("Deleting application:", id)
+
+  const response = await fetch(`${API_URL}/JobApplications/${id}`, {
+    method: "DELETE"
+  })
+
+  console.log("Delete response:", response)
+  console.log("Status:", response.status)
+
+  if(!response.ok){
+    throw new Error("Failed to delete job application");
+  }
+}

@@ -1,4 +1,20 @@
-function ApplicationCard({ application }) {
+import { deleteJobApplications } from "../src/api/jobApplicationApi"
+
+function ApplicationCard({ application, onApplicationDeleted }) {
+
+    const handleDelete = async () => {
+        try {
+            await deleteJobApplications(application.id);
+
+            console.log("Application deleted");
+
+            onApplicationDeleted();
+        } catch (error) {
+            console.log(error)
+            alert("Failed to delete application")
+        }
+    }
+
     return (
         <div>
             <h3>{application.jobTitle}</h3>
@@ -26,6 +42,10 @@ function ApplicationCard({ application }) {
                     </a>
                 </p>
             )}
+
+            <button onClick={handleDelete}>
+                Delete
+            </button>
         </div>
     )
 }
