@@ -16,12 +16,16 @@ function ApplicationCard({ application, onApplicationDeleted, onApplicationEdit 
     }
 
     return (
-        <div>
+        <div className="application-card">
             <h3>{application.jobTitle}</h3>
 
             <p>Company: {application.companyName}</p>
 
-            <p>Status: {application.status}</p>
+            <p>
+                Status: <span className={`status ${application.status.toLowerCase()}`}>
+                    {application.status}
+                </span>
+            </p>
 
             <p>Applied: {application.appliedDate}</p>
 

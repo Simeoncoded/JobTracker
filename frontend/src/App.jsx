@@ -12,6 +12,7 @@ function App() {
   const [applications, setApplications] = useState([]);
   const [editingApplication, setEditingApplication] = useState(null)
   const [statusFilter, setStatusFilter] = useState("All")
+  const [searchTerm, setSearchTerm] = useState("")
 
   useEffect(() => {
     getCompanies()
@@ -40,13 +41,21 @@ function App() {
       })
   }
 
-  const filteredApplications =
-    statusFilter === "All"
-      ? applications
-      : applications.filter(
-        (application) => application.status === statusFilter
-      )
+  const filteredApplications = applications.filter((application) => {
+    const matchesStatus =
+      statusFilter === "All" ||
+      application.status === statusFilter
 
+    const matchesSearch =
+      application.jobTitle
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      application.companyName
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
+
+    return matchesStatus && matchesSearch
+  })
   const totalApplications = applications.length
 
   const appliedApplications = applications.filter(
@@ -117,26 +126,49 @@ function App() {
         </div>
       </div>
 
+      <div className="search">
+        <input
+          type="text"
+          placeholder="Search by job title or company..."
+          value={searchTerm}
+          onChange={(event) => setSearchTerm(event.target.value)}
+        />
+      </div>
 
-      <div>
-        <button onClick={() => setStatusFilter("All")}>
+      <div className="filters">
+        <button
+          className={statusFilter === "All" ? "active" : ""}
+          onClick={() => setStatusFilter("All")}
+        >
           All
         </button>
 
-        <button onClick={() => setStatusFilter("Applied")}>
+        <button
+          className={statusFilter === "Applied" ? "active" : ""}
+          onClick={() => setStatusFilter("Applied")}
+        >
           Applied
         </button>
 
-        <button onClick={() => setStatusFilter("Interview")}>
+        <button
+          className={statusFilter === "Interview" ? "active" : ""}
+          onClick={() => setStatusFilter("Interview")}
+        >
           Interview
         </button>
 
-        <button onClick={() => setStatusFilter("Rejected")}>
-          Rejected
+        <button
+          className={statusFilter === "Offer" ? "active" : ""}
+          onClick={() => setStatusFilter("Offer")}
+        >
+          Offer
         </button>
 
-        <button onClick={() => setStatusFilter("Offer")}>
-          Offer
+        <button
+          className={statusFilter === "Rejected" ? "active" : ""}
+          onClick={() => setStatusFilter("Rejected")}
+        >
+          Rejected
         </button>
       </div>
 

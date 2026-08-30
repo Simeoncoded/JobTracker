@@ -21,3 +21,63 @@
     font-weight: bold;
     margin: 0;
   }
+
+  /* ApplicationCard.jsx*/
+  .application-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 15px 0;
+    max-width: 500px;
+  }
+  
+  .application-card h3 {
+    margin-top: 0;
+  }
+  
+  .status {
+    padding: 4px 8px;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+  
+  .applied {
+    background-color: #e0e0e0;
+  }
+  
+  .interview {
+    background-color: #fff3cd;
+  }
+  
+  .offer {
+    background-color: #d1e7dd;
+  }
+  
+  .rejected {
+    background-color: #f8d7da;
+  }
+
+/* Filter Buttons */
+.filters {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+  }
+  
+  .filters button {
+    padding: 8px 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+  }
+  
+  .filters button:hover {
+    background: #f0f0f0;
+  }
+  
+  .filters button.active {
+    background: #333;
+    color: white;
+  }
