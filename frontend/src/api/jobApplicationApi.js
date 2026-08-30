@@ -26,7 +26,7 @@ export async function createJobApplications(application){
   return await response.json()
 }
 
-export async function updateJobApplications(application, id){
+export async function updateJobApplications(id, application){
   const response = await fetch(`${API_URL}/JobApplications/${id}`,{
     method :"PUT",
     headers:{

@@ -1,7 +1,7 @@
-import { useState } from "react"
-import { createJobApplications } from "../src/api/jobApplicationApi"
+import { useState, useEffect } from "react"
+import { createJobApplications, updateJobApplications } from "../src/api/jobApplicationApi"
 
-function ApplicationForm({ companies, onApplicationCreated }) {
+function ApplicationForm({ companies, onApplicationCreated, editingApplication, onCancelEdit }) {
   const [formData, setFormData] = useState({
     companyId: "",
     jobTitle: "",
@@ -12,6 +12,21 @@ function ApplicationForm({ companies, onApplicationCreated }) {
     salary: "",
     notes: ""
   })
+
+  useEffect(() => {
+    if (editingApplication) {
+      setFormData({
+        companyId: editingApplication.companyId,
+        jobTitle: editingApplication.jobTitle,
+        status: editingApplication.status,
+        appliedDate: editingApplication.appliedDate,
+        jobUrl: editingApplication.jobUrl || "",
+        location: editingApplication.location || "",
+        salary: editingApplication.salary || "",
+        notes: editingApplication.notes || ""
+      })
+    }
+  }, [editingApplication])
 
   const handleChange = (event) => {
     const { name, value } = event.target
@@ -24,23 +39,41 @@ function ApplicationForm({ companies, onApplicationCreated }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-  
+
     const application = {
       ...formData,
       companyId: parseInt(formData.companyId),
       salary: formData.salary
-              ? parseFloat(formData.salary) : null
+        ? parseFloat(formData.salary) : null
     }
-    try{
-      const result = await createJobApplications(application);
-
-      console.log("Created:", result)
+    try {
+      if (editingApplication) {
+        await updateJobApplications(editingApplication.id, application)
+        console.log("Application updated")
+        alert("Application updated successfully!")
+      } else {
+        await createJobApplications(application);
+        alert("Application added successfully!")
+      }
       onApplicationCreated();
+      if (editingApplication) {
+        onCancelEdit()
+      }
 
-      alert("Application added successfully!")
-    }catch (error){
+      setFormData({
+        companyId: "",
+        jobTitle: "",
+        status: "Applied",
+        appliedDate: "",
+        jobUrl: "",
+        location: "",
+        salary: "",
+        notes: ""
+      })
+
+    } catch (error) {
       console.error(error)
-    alert("Failed to create application")
+      alert("Failed to create application")
     }
   }
 
@@ -50,7 +83,7 @@ function ApplicationForm({ companies, onApplicationCreated }) {
         <label>Company</label>
 
         <select
-        name="companyId"
+          name="companyId"
           value={formData.companyId}
           onChange={handleChange}>
           <option value="">Select a company</option>
@@ -68,7 +101,7 @@ function ApplicationForm({ companies, onApplicationCreated }) {
 
         <input
           type="text"
-          name = "jobTitle"
+          name="jobTitle"
           value={formData.jobTitle}
           onChange={handleChange}
           placeholder="e.g. Software Developer"
@@ -78,7 +111,7 @@ function ApplicationForm({ companies, onApplicationCreated }) {
         <label>Status</label>
 
         <select
-         name="status"
+          name="status"
           value={formData.status}
           onChange={handleChange}
         >
@@ -144,8 +177,8 @@ function ApplicationForm({ companies, onApplicationCreated }) {
       </div>
 
       <button type="submit">
-        Add Application
-      </button>
+  {editingApplication ? "Update Application" : "Add Application"}
+</button>
     </form>
 
   )

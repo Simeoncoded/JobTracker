@@ -1,6 +1,6 @@
-import { deleteJobApplications } from "../src/api/jobApplicationApi"
+import { updateJobApplications, deleteJobApplications } from "../src/api/jobApplicationApi"
 
-function ApplicationCard({ application, onApplicationDeleted }) {
+function ApplicationCard({ application, onApplicationDeleted, onApplicationEdit }) {
 
     const handleDelete = async () => {
         try {
@@ -42,7 +42,9 @@ function ApplicationCard({ application, onApplicationDeleted }) {
                     </a>
                 </p>
             )}
-
+            <button onClick={() => onApplicationEdit(application)}>
+                Edit
+            </button>
             <button onClick={handleDelete}>
                 Delete
             </button>

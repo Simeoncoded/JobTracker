@@ -1,6 +1,6 @@
 import ApplicationCard from "./ApplicationCard"
 
-function ApplicationList({ applications, onApplicationDeleted }){
+function ApplicationList({ applications, onApplicationDeleted, onApplicationEdit }){
     return (
         <div>
       <h2>Applications</h2>
@@ -9,7 +9,8 @@ function ApplicationList({ applications, onApplicationDeleted }){
         {applications.map((application) => (
           <ApplicationCard key={application.id}
           application={application}
-          onApplicationDeleted={onApplicationDeleted}/>
+          onApplicationDeleted={onApplicationDeleted}
+          onApplicationEdit={onApplicationEdit}/>
         ))}
       </ul>
     </div>

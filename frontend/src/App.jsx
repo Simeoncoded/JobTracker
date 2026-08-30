@@ -9,6 +9,7 @@ import ApplicationList from "../components/ApplicationList";
 function App() {
   const [companies, setCompanies] = useState([]);
   const [applications, setApplications] = useState([]);
+  const [editingApplication, setEditingApplication] = useState(null)
 
   useEffect(() => {
     getCompanies()
@@ -37,12 +38,23 @@ function App() {
       })
     }
   
+  const handleEdit = (application) => {
+    setEditingApplication(application)
+  }
+  const handleCancelEdit = () => {
+    setEditingApplication(null)
+  }
+  
 
   return (
     <div>
       <Navbar title="JobTracker" />
 
-      <ApplicationForm companies={companies} onApplicationCreated= {loadApplications} />
+      <ApplicationForm companies={companies} 
+      onApplicationCreated= {loadApplications} 
+      editingApplication={editingApplication}
+      onCancelEdit={handleCancelEdit}
+      />
 
 
       <h2>Companies</h2>
@@ -55,7 +67,7 @@ function App() {
         ))}
       </ul>
 
-      <ApplicationList applications={applications} onApplicationDeleted = {loadApplications}/>
+      <ApplicationList applications={applications} onApplicationDeleted = {loadApplications} onApplicationEdit={handleEdit}/>
 
     </div>
   )
