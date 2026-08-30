@@ -10,7 +10,7 @@ export async function getJobApplications() {
   return await response.json()
 }
 
-export async function createJobApplications(){
+export async function createJobApplications(application){
   const response = await fetch(`${API_URL}/JobApplications`,{
     method: "POST",
     headers: {

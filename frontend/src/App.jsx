@@ -27,11 +27,22 @@ function App() {
       })
   }, [])
 
+  const loadApplications = () => {
+    getJobApplications()
+      .then((data) => {
+        setApplications(data)
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+    }
+  
+
   return (
     <div>
       <Navbar title="JobTracker" />
 
-      <ApplicationForm companies={companies}/>
+      <ApplicationForm companies={companies} onApplicationCreated= {loadApplications} />
 
       <h2>Companies</h2>
 

@@ -1,10 +1,11 @@
 import { useState } from "react"
+import { createJobApplications } from "../src/api/jobApplicationApi"
 
-function ApplicationForm({ companies }) {
+function ApplicationForm({ companies, onApplicationCreated }) {
   const [formData, setFormData] = useState({
     companyId: "",
     jobTitle: "",
-    status: "",
+    status: "Applied",
     appliedDate: "",
     jobUrl: "",
     location: "",
@@ -20,11 +21,27 @@ function ApplicationForm({ companies }) {
       [name]: value
     })
   }
-  
-  const handleSubmit = (event) => {
+
+  const handleSubmit = async (event) => {
     event.preventDefault()
   
-    console.log("Form Data:", formData)
+    const application = {
+      ...formData,
+      companyId: parseInt(formData.companyId),
+      salary: formData.salary
+              ? parseFloat(formData.salary) : null
+    }
+    try{
+      const result = await createJobApplications(application);
+
+      console.log("Created:", result)
+      onApplicationCreated();
+
+      alert("Application added successfully!")
+    }catch (error){
+      console.error(error)
+    alert("Failed to create application")
+    }
   }
 
   return (
@@ -61,7 +78,7 @@ function ApplicationForm({ companies }) {
         <label>Status</label>
 
         <select
-        name="status"
+         name="status"
           value={formData.status}
           onChange={handleChange}
         >
