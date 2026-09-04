@@ -5,6 +5,8 @@ import ApplicationForm from "../components/ApplicationForm"
 import { getCompanies } from "./api/companyApi";
 import { getJobApplications } from "./api/jobApplicationApi";
 import ApplicationList from "../components/ApplicationList";
+import ResumeForm from "../components/ResumeForm";
+import { getResumes } from "./api/resumeApi";
 import "./App.css"
 
 function App() {
@@ -13,6 +15,7 @@ function App() {
   const [editingApplication, setEditingApplication] = useState(null)
   const [statusFilter, setStatusFilter] = useState("All")
   const [searchTerm, setSearchTerm] = useState("")
+  const [resumes, setResumes] = useState([])
 
   useEffect(() => {
     getCompanies()
@@ -29,12 +32,29 @@ function App() {
       .catch((error) => {
         console.error(error)
       })
+    getResumes()
+      .then((data) => {
+        setResumes(data)
+      })
+      .catch((error) => {
+        console.error(error)
+      })
   }, [])
 
   const loadApplications = () => {
     getJobApplications()
       .then((data) => {
         setApplications(data)
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }
+
+  const loadResumes = () => {
+    getResumes()
+      .then((data) => {
+        setResumes(data)
       })
       .catch((error) => {
         console.error(error)
@@ -173,6 +193,18 @@ function App() {
       </div>
 
       <ApplicationList applications={filteredApplications} onApplicationDeleted={loadApplications} onApplicationEdit={handleEdit} />
+
+      <h2>Resume</h2>
+
+      <ResumeForm onResumeCreated={loadResumes} />
+
+      <ul>
+        {resumes.map((resume) => (
+          <li key={resume.id}>
+            {resume.fileName}
+          </li>
+        ))}
+      </ul>
 
     </div>
   )
