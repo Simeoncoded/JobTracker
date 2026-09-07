@@ -10,18 +10,19 @@ export const getResumes = async () => {
   return response.json()
 }
 
-export const createResume = async (resume) => {
-  const response = await fetch(`${API_URL}/resumes`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(resume)
-  })
+export const createResume = async (file) => {
+    const formData = new FormData()
 
-  if (!response.ok) {
-    throw new Error("Failed to create resume")
-  }
-
-  return response.json()
+    formData.append("file", file)
+  
+    const response = await fetch(`${API_URL}/resumes`, {
+      method: "POST",
+      body: formData
+    })
+  
+    if (!response.ok) {
+      throw new Error("Failed to upload resume")
+    }
+  
+    return response.json()
 }

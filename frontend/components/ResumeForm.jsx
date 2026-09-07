@@ -2,56 +2,47 @@ import { useState } from "react"
 import { createResume } from "../src/api/resumeApi"
 
 function ResumeForm({ onResumeCreated }) {
-  const [fileName, setFileName] = useState("")
-  const [extractedText, setExtractedText] = useState("")
+  const [file, setFile] = useState(null)
 
   const handleSubmit = async (event) => {
     event.preventDefault()
 
-    const resume = {
-      fileName,
-      extractedText
+    if (!file) {
+      alert("Please select a PDF")
+      return
     }
 
     try {
-      const result = await createResume(resume)
+      const result = await createResume(file)
 
       console.log("Resume created:", result)
 
-      alert("Resume saved successfully!")
+      alert("Resume uploaded successfully!")
+
+      setFile(null)
+      event.target.reset()
 
       onResumeCreated()
     } catch (error) {
       console.error(error)
-      alert("Failed to save resume")
+      alert("Failed to upload resume")
     }
   }
 
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        <label>File Name</label>
+        <label>Upload Resume (PDF)</label>
 
         <input
-          type="text"
-          value={fileName}
-          onChange={(event) => setFileName(event.target.value)}
-          placeholder="e.g. Simeon-Resume.pdf"
-        />
-      </div>
-
-      <div>
-        <label>Resume Text</label>
-
-        <textarea
-          value={extractedText}
-          onChange={(event) => setExtractedText(event.target.value)}
-          placeholder="Paste your resume text here..."
+          type="file"
+          accept=".pdf"
+          onChange={(event) => setFile(event.target.files[0])}
         />
       </div>
 
       <button type="submit">
-        Save Resume
+        Upload Resume
       </button>
     </form>
   )
