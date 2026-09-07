@@ -40,12 +40,33 @@ namespace JobTracker.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateResumeDTO dto)
+        public async Task<IActionResult> Create(IFormFile file)
         {
+            if(file == null || file.Length == 0)
+            {
+                return BadRequest("No file uploaded.");
+            }
+
+            if (Path.GetExtension(file.FileName).ToLower() != ".pdf")
+            {
+                return BadRequest("Only PDF files are allowed.");
+            }
+
+            string extractedText = "";
+
+            using (var stream = file.OpenReadStream())
+            using (var document = UglyToad.PdfPig.PdfDocument.Open(stream))
+            {
+                foreach (var page in document.GetPages())
+                {
+                    extractedText += page.Text + "\n";
+                }
+            }
+
             var resume = new Resume
             {
-                FileName = dto.FileName,
-                ExtractedText = dto.ExtractedText,
+                FileName = file.FileName,
+                ExtractedText = extractedText,
                 UploadedDate = DateTime.UtcNow
             };
 
