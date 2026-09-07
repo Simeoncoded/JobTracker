@@ -11,6 +11,7 @@ namespace JobTracker.Data
         public DbSet<JobApplication> JobApplications { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<Resume> Resumes { get; set; }
+        public DbSet<JobAnalysis> JobAnalyses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
