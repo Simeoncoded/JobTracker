@@ -1,6 +1,7 @@
 ﻿using JobTracker.Data;
 using JobTracker.DTOs;
 using JobTracker.Models;
+using JobTracker.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +12,7 @@ namespace JobTracker.Controllers
     public class JobAnalysesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IJobAnalysisService _service;
         
         public JobAnalysesController(ApplicationDbContext context)
         {
@@ -20,25 +22,7 @@ namespace JobTracker.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateJobAnalysisDTO dto)
         {
-            var resume = _context.Resumes.FindAsync(dto.ResumeId);
-
-            if(resume == null)
-            {
-                return NotFound("Resume not found");
-            }
-
-            var analysis = new JobAnalysis
-            {
-                ResumeId = dto.ResumeId,
-                JobTitle = dto.JobTitle,
-                JobDescription = dto.JobDescription,
-                MatchScore = 0,
-                Analysis = "Analysis pending.",
-                CreatedAt = DateTime.UtcNow
-            };
-
-            _context.JobAnalyses.Add(analysis);
-            await _context.SaveChangesAsync();
+            var analysis = await _service.CreateAsync(dto);
 
             return Ok(analysis);
         }

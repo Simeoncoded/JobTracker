@@ -35,6 +35,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IJobApplicationService, JobApplicationService>();
 builder.Services.AddScoped<ICompanyService, CompanyService>();
+builder.Services.AddScoped<IJobAnalysisService, JobAnalysisService>();
 
 var app = builder.Build();
 
