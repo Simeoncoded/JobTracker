@@ -1,8 +1,10 @@
-﻿namespace JobTracker.Services
+﻿using JobTracker.DTOs;
+
+namespace JobTracker.Services
 {
     public interface IAiService
     {
-        Task<string> AnalyzeResumeAsync(string resumeText, string jobDescription);
+        Task<AiAnalysisResultDTO> AnalyzeResumeAsync(string resumeText,string jobDescription);
 
     }
 }

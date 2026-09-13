@@ -18,20 +18,25 @@ namespace JobTracker.Services
         public async Task<JobAnalysis> CreateAsync(CreateJobAnalysisDTO dto)
         {
             var resume = await _context.Resumes.FindAsync(dto.ResumeId);
-            var aiResult = await _aiService.AnalyzeResumeAsync(resume.ExtractedText,dto.JobDescription);
 
             if (resume == null)
             {
                 throw new Exception("Resume not found.");
             }
 
-            var analysis = new JobAnalysis
+            AiAnalysisResultDTO aiResult =
+                await _aiService.AnalyzeResumeAsync(
+                    resume.ExtractedText,
+                    dto.JobDescription
+                );
+
+            JobAnalysis analysis = new JobAnalysis
             {
                 ResumeId = dto.ResumeId,
                 JobTitle = dto.JobTitle,
                 JobDescription = dto.JobDescription,
-                MatchScore = 0,
-                Analysis = aiResult,
+                MatchScore = aiResult.MatchScore,
+                Analysis = aiResult.Recommendation,
                 CreatedAt = DateTime.UtcNow
             };
 
