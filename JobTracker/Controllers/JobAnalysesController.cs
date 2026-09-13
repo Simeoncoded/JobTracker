@@ -14,9 +14,10 @@ namespace JobTracker.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IJobAnalysisService _service;
         
-        public JobAnalysesController(ApplicationDbContext context)
+        public JobAnalysesController(ApplicationDbContext context, IJobAnalysisService service)
         {
             _context = context;
+            _service = service;
         }
 
         [HttpPost]

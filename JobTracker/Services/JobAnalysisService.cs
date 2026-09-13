@@ -7,15 +7,18 @@ namespace JobTracker.Services
     public class JobAnalysisService : IJobAnalysisService
     {
         private readonly ApplicationDbContext _context;
+        private readonly IAiService _aiService;
 
-        public JobAnalysisService(ApplicationDbContext context)
+        public JobAnalysisService(ApplicationDbContext context, IAiService aiService)
         {
             _context = context;
+            _aiService = aiService;
         }
 
         public async Task<JobAnalysis> CreateAsync(CreateJobAnalysisDTO dto)
         {
             var resume = await _context.Resumes.FindAsync(dto.ResumeId);
+            var aiResult = await _aiService.AnalyzeResumeAsync(resume.ExtractedText,dto.JobDescription);
 
             if (resume == null)
             {
@@ -28,7 +31,7 @@ namespace JobTracker.Services
                 JobTitle = dto.JobTitle,
                 JobDescription = dto.JobDescription,
                 MatchScore = 0,
-                Analysis = "Analysis pending.",
+                Analysis = aiResult,
                 CreatedAt = DateTime.UtcNow
             };
 
