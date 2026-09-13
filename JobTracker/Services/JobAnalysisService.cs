@@ -36,7 +36,9 @@ namespace JobTracker.Services
                 JobTitle = dto.JobTitle,
                 JobDescription = dto.JobDescription,
                 MatchScore = aiResult.MatchScore,
-                Analysis = aiResult.Recommendation,
+                MatchingSkills = aiResult.MatchingSkills,
+                MissingSkills = aiResult.MissingSkills,
+                Recommendation = aiResult.Recommendation,
                 CreatedAt = DateTime.UtcNow
             };
 

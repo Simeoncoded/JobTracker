@@ -67,7 +67,7 @@ public class AiService : IAiService
                 aiResponse,
                 options
             )
-            ?? throw new Exception("AI returned an invalid response.");
+            ?? throw new Exception("AI returned an invalid response."); 
 
         return result;
     }

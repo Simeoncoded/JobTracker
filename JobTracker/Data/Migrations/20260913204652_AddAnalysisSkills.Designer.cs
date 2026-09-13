@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using JobTracker.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace JobTracker.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260913204652_AddAnalysisSkills")]
+    partial class AddAnalysisSkills
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,6 +54,10 @@ namespace JobTracker.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Analysis")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -72,10 +79,6 @@ namespace JobTracker.Data.Migrations
                     b.Property<List<string>>("MissingSkills")
                         .IsRequired()
                         .HasColumnType("text[]");
-
-                    b.Property<string>("Recommendation")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<int>("ResumeId")
                         .HasColumnType("integer");
