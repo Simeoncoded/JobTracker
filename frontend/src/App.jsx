@@ -8,6 +8,7 @@ import ApplicationList from "../components/ApplicationList";
 import ResumeForm from "../components/ResumeForm";
 import { getResumes } from "./api/resumeApi";
 import JobAnalysisForm from "../components/JobAnalysisForm";
+import AnalysisResult from "../components/AnalysisResult";
 import "./App.css"
 
 function App() {
@@ -216,35 +217,7 @@ function App() {
   />
 </section>
 
-{latestAnalysis && (
-  <section>
-    <h2>Analysis Result</h2>
-
-    <p>
-      Match Score: {latestAnalysis.matchScore}%
-    </p>
-
-    <h3>Matching Skills</h3>
-
-    <ul>
-      {latestAnalysis.matchingSkills.map((skill, index) => (
-        <li key={index}>{skill}</li>
-      ))}
-    </ul>
-
-    <h3>Missing Skills</h3>
-
-    <ul>
-      {latestAnalysis.missingSkills.map((skill, index) => (
-        <li key={index}>{skill}</li>
-      ))}
-    </ul>
-
-    <h3>Recommendation</h3>
-
-    <p>{latestAnalysis.recommendation}</p>
-  </section>
-)}
+<AnalysisResult analysis={latestAnalysis} />
 
     </div>
   )
