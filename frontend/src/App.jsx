@@ -9,6 +9,9 @@ import ResumeForm from "../components/ResumeForm";
 import { getResumes } from "./api/resumeApi";
 import JobAnalysisForm from "../components/JobAnalysisForm";
 import AnalysisResult from "../components/AnalysisResult";
+import { createJobAnalysis } from "./api/jobAnalysisApi"
+import { getJobAnalyses } from "./api/jobAnalysisApi"
+import AnalysisHistory from "../components/AnalysisHistory"
 import "./App.css"
 
 function App() {
@@ -19,6 +22,7 @@ function App() {
   const [searchTerm, setSearchTerm] = useState("")
   const [resumes, setResumes] = useState([])
   const [latestAnalysis, setLatestAnalysis] = useState(null)
+  const [analyses, setAnalyses] = useState([])
 
   useEffect(() => {
     getCompanies()
@@ -42,6 +46,9 @@ function App() {
       .catch((error) => {
         console.error(error)
       })
+    getJobAnalyses()
+      .then((data) => setAnalyses(data))
+      .catch((error) => console.error(error))
   }, [])
 
   const loadApplications = () => {
@@ -209,15 +216,21 @@ function App() {
         ))}
       </ul>
       <section>
-  <h2>AI Resume Checker</h2>
+        <h2>AI Resume Checker</h2>
 
-  <JobAnalysisForm
-    resumes={resumes}
-    onAnalysisCreated={(analysis) => setLatestAnalysis(analysis)}
-  />
-</section>
+        <JobAnalysisForm
+          resumes={resumes}
+          onAnalysisCreated={(analysis) => {
+            setLatestAnalysis(analysis)
+            setAnalyses((previousAnalyses) => [
+              analysis,
+              ...previousAnalyses
+            ])
+          }}
+        />
+      </section>
 
-<AnalysisResult analysis={latestAnalysis} />
+      <AnalysisResult analysis={latestAnalysis} />
 
     </div>
   )

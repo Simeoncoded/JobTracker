@@ -16,3 +16,13 @@ export const createJobAnalysis = async (analysis) => {
   
     return response.json()
   }
+
+  export const getJobAnalyses = async () => {
+    const response = await fetch(`${API_URL}/JobAnalyses`)
+  
+    if (!response.ok) {
+      throw new Error("Failed to fetch analyses")
+    }
+  
+    return response.json()
+  }
