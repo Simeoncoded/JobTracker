@@ -1,6 +1,7 @@
 ﻿using JobTracker.Data;
 using JobTracker.DTOs;
 using JobTracker.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace JobTracker.Services
 {
@@ -15,6 +16,15 @@ namespace JobTracker.Services
             _aiService = aiService;
         }
 
+        public async Task<List<JobAnalysis>> GetAllAsync()
+        {
+            List<JobAnalysis> analyses =
+                await _context.JobAnalyses
+                    .OrderByDescending(analysis => analysis.CreatedAt)
+                    .ToListAsync();
+
+            return analyses;
+        }
         public async Task<JobAnalysis> CreateAsync(CreateJobAnalysisDTO dto)
         {
             var resume = await _context.Resumes.FindAsync(dto.ResumeId);

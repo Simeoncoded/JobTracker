@@ -20,6 +20,15 @@ namespace JobTracker.Controllers
             _service = service;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            List<JobAnalysis> analyses =
+                await _service.GetAllAsync();
+
+            return Ok(analyses);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create(CreateJobAnalysisDTO dto)
         {
