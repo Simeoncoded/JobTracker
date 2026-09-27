@@ -1,22 +1,20 @@
 import { useState } from "react"
-import { useEffect } from "react";
-import Navbar from "../components/Navbar"
+import { useEffect } from "react"
 import ApplicationForm from "../components/ApplicationForm"
-import { getCompanies } from "./api/companyApi";
-import { getJobApplications } from "./api/jobApplicationApi";
-import ApplicationList from "../components/ApplicationList";
-import ResumeForm from "../components/ResumeForm";
-import { getResumes } from "./api/resumeApi";
-import JobAnalysisForm from "../components/JobAnalysisForm";
-import AnalysisResult from "../components/AnalysisResult";
-import { createJobAnalysis } from "./api/jobAnalysisApi"
+import { getCompanies } from "./api/companyApi"
+import { getJobApplications } from "./api/jobApplicationApi"
+import ApplicationList from "../components/ApplicationList"
+import ResumeForm from "../components/ResumeForm"
+import { getResumes } from "./api/resumeApi"
+import JobAnalysisForm from "../components/JobAnalysisForm"
+import AnalysisResult from "../components/AnalysisResult"
 import { getJobAnalyses } from "./api/jobAnalysisApi"
 import AnalysisHistory from "../components/AnalysisHistory"
 import "./App.css"
 
 function App() {
-  const [companies, setCompanies] = useState([]);
-  const [applications, setApplications] = useState([]);
+  const [companies, setCompanies] = useState([])
+  const [applications, setApplications] = useState([])
   const [editingApplication, setEditingApplication] = useState(null)
   const [statusFilter, setStatusFilter] = useState("All")
   const [searchTerm, setSearchTerm] = useState("")
@@ -32,6 +30,7 @@ function App() {
       .catch((error) => {
         console.error(error)
       })
+
     getJobApplications()
       .then((data) => {
         setApplications(data)
@@ -39,6 +38,7 @@ function App() {
       .catch((error) => {
         console.error(error)
       })
+
     getResumes()
       .then((data) => {
         setResumes(data)
@@ -46,9 +46,14 @@ function App() {
       .catch((error) => {
         console.error(error)
       })
+
     getJobAnalyses()
-      .then((data) => setAnalyses(data))
-      .catch((error) => console.error(error))
+      .then((data) => {
+        setAnalyses(data)
+      })
+      .catch((error) => {
+        console.error(error)
+      })
   }, [])
 
   const loadApplications = () => {
@@ -86,151 +91,325 @@ function App() {
 
     return matchesStatus && matchesSearch
   })
+
   const totalApplications = applications.length
 
   const appliedApplications = applications.filter(
-    (application) => application.status === "Applied").length
+    (application) => application.status === "Applied"
+  ).length
 
   const interviewedApplications = applications.filter(
-    (application) => application.status === "Interview").length
+    (application) => application.status === "Interview"
+  ).length
 
   const offerApplications = applications.filter(
-    (application) => application.status === "Offer").length
+    (application) => application.status === "Offer"
+  ).length
 
   const rejectedApplications = applications.filter(
-    (application) => application.status === "Rejected").length
+    (application) => application.status === "Rejected"
+  ).length
 
   const handleEdit = (application) => {
     setEditingApplication(application)
   }
+
   const handleCancelEdit = () => {
     setEditingApplication(null)
   }
 
-
   return (
-    <div>
-      <Navbar title="JobTracker" />
+    <div className="app">
+      <main className="dashboard">
 
-      <ApplicationForm companies={companies}
-        onApplicationCreated={loadApplications}
-        editingApplication={editingApplication}
-        onCancelEdit={handleCancelEdit}
-      />
+        <section className="hero">
+          <div>
+            <p className="eyebrow">JOB SEARCH DASHBOARD</p>
 
+            <h1>
+              Keep your job search
+              <span> organized.</span>
+            </h1>
 
-      <h2>Companies</h2>
+            <p className="hero-text">
+              Track applications, manage resumes, and use AI to see
+              how well your resume matches a job.
+            </p>
+          </div>
+        </section>
 
-      <ul>
-        {companies.map((company) => (
-          <li key={company.id}>
-            {company.name}
-          </li>
-        ))}
-      </ul>
+        {/* Application Form */}
 
-      <div className="stats">
-        <div className="stat-card">
-          <h3>Total Applications</h3>
-          <p>{totalApplications}</p>
-        </div>
+        <section className="section-card">
+          <div className="section-header">
+            <div>
+              <p className="section-label">APPLICATIONS</p>
+              <h2>Add Job Application</h2>
+              <p>
+                Keep track of the jobs you're applying for.
+              </p>
+            </div>
+          </div>
 
-        <div className="stat-card">
-          <h3>Applied</h3>
-          <p>{appliedApplications}</p>
-        </div>
+          <ApplicationForm
+            companies={companies}
+            onApplicationCreated={loadApplications}
+            editingApplication={editingApplication}
+            onCancelEdit={handleCancelEdit}
+          />
+        </section>
 
-        <div className="stat-card">
-          <h3>Interview</h3>
-          <p>{interviewedApplications}</p>
-        </div>
+        {/* Statistics */}
 
-        <div className="stat-card">
-          <h3>Offer</h3>
-          <p>{offerApplications}</p>
-        </div>
+        <section className="stats">
 
-        <div className="stat-card">
-          <h3>Rejected</h3>
-          <p>{rejectedApplications}</p>
-        </div>
-      </div>
+          <div className="stat-card">
+            <div className="stat-icon">📋</div>
+            <p>Total Applications</p>
+            <h3>{totalApplications}</h3>
+          </div>
 
-      <div className="search">
-        <input
-          type="text"
-          placeholder="Search by job title or company..."
-          value={searchTerm}
-          onChange={(event) => setSearchTerm(event.target.value)}
-        />
-      </div>
+          <div className="stat-card">
+            <div className="stat-icon">📨</div>
+            <p>Applied</p>
+            <h3>{appliedApplications}</h3>
+          </div>
 
-      <div className="filters">
-        <button
-          className={statusFilter === "All" ? "active" : ""}
-          onClick={() => setStatusFilter("All")}
-        >
-          All
-        </button>
+          <div className="stat-card">
+            <div className="stat-icon">💬</div>
+            <p>Interviews</p>
+            <h3>{interviewedApplications}</h3>
+          </div>
 
-        <button
-          className={statusFilter === "Applied" ? "active" : ""}
-          onClick={() => setStatusFilter("Applied")}
-        >
-          Applied
-        </button>
+          <div className="stat-card">
+            <div className="stat-icon">🎉</div>
+            <p>Offers</p>
+            <h3>{offerApplications}</h3>
+          </div>
 
-        <button
-          className={statusFilter === "Interview" ? "active" : ""}
-          onClick={() => setStatusFilter("Interview")}
-        >
-          Interview
-        </button>
+          <div className="stat-card">
+            <div className="stat-icon">✕</div>
+            <p>Rejected</p>
+            <h3>{rejectedApplications}</h3>
+          </div>
 
-        <button
-          className={statusFilter === "Offer" ? "active" : ""}
-          onClick={() => setStatusFilter("Offer")}
-        >
-          Offer
-        </button>
+        </section>
 
-        <button
-          className={statusFilter === "Rejected" ? "active" : ""}
-          onClick={() => setStatusFilter("Rejected")}
-        >
-          Rejected
-        </button>
-      </div>
+        {/* Companies */}
 
-      <ApplicationList applications={filteredApplications} onApplicationDeleted={loadApplications} onApplicationEdit={handleEdit} />
+        <section className="section-card">
+          <div className="section-header">
+            <div>
+              <p className="section-label">COMPANIES</p>
+              <h2>Your Companies</h2>
+            </div>
 
-      <h2>Resume</h2>
+            <span className="count-badge">
+              {companies.length}
+            </span>
+          </div>
 
-      <ResumeForm onResumeCreated={loadResumes} />
+          <div className="company-list">
+            {companies.map((company) => (
+              <div className="company-item" key={company.id}>
+                <div className="company-avatar">
+                  {company.name.charAt(0).toUpperCase()}
+                </div>
 
-      <ul>
-        {resumes.map((resume) => (
-          <li key={resume.id}>
-            {resume.fileName}
-          </li>
-        ))}
-      </ul>
-      <section>
-        <h2>AI Resume Checker</h2>
+                <span>{company.name}</span>
+              </div>
+            ))}
+          </div>
+        </section>
 
-        <JobAnalysisForm
-          resumes={resumes}
-          onAnalysisCreated={(analysis) => {
-            setLatestAnalysis(analysis)
-            setAnalyses((previousAnalyses) => [
-              analysis,
-              ...previousAnalyses
-            ])
-          }}
-        />
-      </section>
+        {/* Applications */}
 
-      <AnalysisResult analysis={latestAnalysis} />
+        <section className="section-card">
+
+          <div className="section-header">
+            <div>
+              <p className="section-label">JOB SEARCH</p>
+              <h2>Your Applications</h2>
+              <p>
+                Search and filter your current applications.
+              </p>
+            </div>
+          </div>
+
+          <div className="search-container">
+            <span className="search-icon">⌕</span>
+
+            <input
+              type="text"
+              placeholder="Search by job title or company..."
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+            />
+          </div>
+
+          <div className="filters">
+
+            <button
+              className={statusFilter === "All" ? "active" : ""}
+              onClick={() => setStatusFilter("All")}
+            >
+              All
+            </button>
+
+            <button
+              className={statusFilter === "Applied" ? "active" : ""}
+              onClick={() => setStatusFilter("Applied")}
+            >
+              Applied
+            </button>
+
+            <button
+              className={statusFilter === "Interview" ? "active" : ""}
+              onClick={() => setStatusFilter("Interview")}
+            >
+              Interview
+            </button>
+
+            <button
+              className={statusFilter === "Offer" ? "active" : ""}
+              onClick={() => setStatusFilter("Offer")}
+            >
+              Offer
+            </button>
+
+            <button
+              className={statusFilter === "Rejected" ? "active" : ""}
+              onClick={() => setStatusFilter("Rejected")}
+            >
+              Rejected
+            </button>
+
+          </div>
+
+          <ApplicationList
+            applications={filteredApplications}
+            onApplicationDeleted={loadApplications}
+            onApplicationEdit={handleEdit}
+          />
+
+        </section>
+
+        {/* Resume */}
+
+        <section className="section-card">
+
+          <div className="section-header">
+            <div>
+              <p className="section-label">RESUME</p>
+              <h2>Manage Your Resume</h2>
+              <p>
+                Upload a PDF resume to use with the AI Resume Checker.
+              </p>
+            </div>
+          </div>
+
+          <ResumeForm onResumeCreated={loadResumes} />
+
+          <div className="resume-list">
+
+            {resumes.map((resume) => (
+              <div className="resume-item" key={resume.id}>
+
+                <div className="resume-icon">
+                  📄
+                </div>
+
+                <div>
+                  <strong>{resume.fileName}</strong>
+
+                  <span>
+                    Uploaded resume
+                  </span>
+                </div>
+
+              </div>
+            ))}
+
+          </div>
+
+        </section>
+
+        {/* AI Resume Checker */}
+
+        <section className="ai-section">
+
+          <div className="ai-header">
+
+            <div>
+              <span className="ai-badge">
+                ✨ AI POWERED
+              </span>
+
+              <h2>AI Resume Checker</h2>
+
+              <p>
+                Compare your resume against a job description
+                and discover your strengths and skill gaps.
+              </p>
+            </div>
+
+          </div>
+
+          <div className="ai-form-container">
+
+            <JobAnalysisForm
+              resumes={resumes}
+              onAnalysisCreated={(analysis) => {
+                setLatestAnalysis(analysis)
+
+                setAnalyses((previousAnalyses) => [
+                  analysis,
+                  ...previousAnalyses
+                ])
+              }}
+            />
+
+          </div>
+
+        </section>
+
+        {/* Latest Analysis */}
+
+        {latestAnalysis && (
+          <section className="section-card">
+
+            <div className="section-header">
+              <div>
+                <p className="section-label">AI RESULTS</p>
+                <h2>Latest Analysis</h2>
+              </div>
+            </div>
+
+            <AnalysisResult
+              analysis={latestAnalysis}
+            />
+
+          </section>
+        )}
+
+        {/* Analysis History */}
+
+        <section className="section-card">
+
+          <AnalysisHistory
+            analyses={analyses}
+          />
+
+        </section>
+
+      </main>
+
+      <footer className="footer">
+        <p>
+          JobTracker · Built with React, ASP.NET Core,
+          PostgreSQL & AI
+        </p>
+      </footer>
 
     </div>
   )
