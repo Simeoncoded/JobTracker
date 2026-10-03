@@ -6,5 +6,8 @@
         public string FileName { get; set; } = string.Empty;
         public string ExtractedText {  get; set; } = string.Empty;
         public DateTime UploadedDate { get; set; }
+        public string UserId { get; set; } = string.Empty;
+        public ICollection<JobAnalysis> JobAnalyses { get; set; }
+         = new List<JobAnalysis>();
     }
 }
