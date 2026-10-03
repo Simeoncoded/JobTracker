@@ -1,15 +1,14 @@
 ﻿using JobTracker.DTOs;
 using JobTracker.Models;
-using Microsoft.AspNetCore.Mvc;
 
 namespace JobTracker.Services
 {
-    public interface IJobApplicationService 
+    public interface IJobApplicationService
     {
-        Task<List<JobApplicationResponseDTO>> GetAllAsync();
-        Task<JobApplicationResponseDTO?> GetByIdAsync(int id);
-        Task<JobApplication?> CreateAsync(CreateJobApplicationDTO dto);
-        Task<bool> UpdateAsync(int id, UpdateJobApplicationDTO dto);
-        Task<bool> DeleteAsync(int id);
+        Task<List<JobApplicationResponseDTO>> GetAllAsync(string userId);
+        Task<JobApplicationResponseDTO?> GetByIdAsync(int id,string userId);
+        Task<JobApplication?> CreateAsync(CreateJobApplicationDTO dto,string userId);
+        Task<bool> UpdateAsync(int id,UpdateJobApplicationDTO dto,string userId);
+        Task<bool> DeleteAsync(int id, string userId);
     }
 }

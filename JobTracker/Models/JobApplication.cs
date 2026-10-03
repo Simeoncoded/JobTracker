@@ -12,6 +12,7 @@
         public string? Notes { get; set; }
         public int CompanyId { get; set; }
         public Company Company { get; set; } = null!;
+        public string UserId { get; set; } = string.Empty;
 
     }
 }
