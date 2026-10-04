@@ -10,6 +10,8 @@ import JobAnalysisForm from "../components/JobAnalysisForm"
 import AnalysisResult from "../components/AnalysisResult"
 import { getJobAnalyses } from "./api/jobAnalysisApi"
 import AnalysisHistory from "../components/AnalysisHistory"
+import Login from "./Login"
+import Register from "./Register"
 import "./App.css"
 
 function App() {
@@ -21,8 +23,15 @@ function App() {
   const [resumes, setResumes] = useState([])
   const [latestAnalysis, setLatestAnalysis] = useState(null)
   const [analyses, setAnalyses] = useState([])
-
+  const [showRegister, setShowRegister] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    Boolean(sessionStorage.getItem("token"))
+  )
+  
   useEffect(() => {
+    if (!isLoggedIn) {
+      return
+    }
     getCompanies()
       .then((data) => {
         setCompanies(data)
@@ -54,7 +63,7 @@ function App() {
       .catch((error) => {
         console.error(error)
       })
-  }, [])
+  }, [isLoggedIn])
 
   const loadApplications = () => {
     getJobApplications()
@@ -118,6 +127,22 @@ function App() {
     setEditingApplication(null)
   }
 
+  if (!isLoggedIn) {
+    if (showRegister) {
+      return (
+        <Register
+          onRegister={() => setShowRegister(false)}
+        />
+      )
+    }
+  
+    return (
+      <Login
+        onLogin={() => setIsLoggedIn(true)}
+        onRegister={() => setShowRegister(true)}
+      />
+    )
+  }
   return (
     <div className="app">
       <main className="dashboard">
