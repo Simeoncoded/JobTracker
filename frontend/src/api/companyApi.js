@@ -1,9 +1,11 @@
+import { apiFetch } from "./apiFetch"
+
 const API_URL = import.meta.env.VITE_API_URL
 
 export async function getCompanies() {
   console.log("Calling API...")
 
-  const response = await fetch(`${API_URL}/companies`)
+  const response = await apiFetch(`${API_URL}/companies`)
 
   console.log("Response received:", response)
 

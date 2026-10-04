@@ -1,10 +1,8 @@
-﻿using JobTracker.Data;
-using JobTracker.DTOs;
-using JobTracker.Models;
+﻿using JobTracker.DTOs;
 using JobTracker.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace JobTracker.Controllers
 {
@@ -13,7 +11,7 @@ namespace JobTracker.Controllers
     [Authorize]
     public class JobApplicationsController : ControllerBase
     {
-        private readonly IJobApplicationService _service;   
+        private readonly IJobApplicationService _service;
 
         public JobApplicationsController(IJobApplicationService service)
         {
@@ -23,7 +21,14 @@ namespace JobTracker.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var applications = await _service.GetAllAsync();
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var applications = await _service.GetAllAsync(userId);
 
             return Ok(applications);
         }
@@ -31,7 +36,14 @@ namespace JobTracker.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var application = await _service.GetByIdAsync(id);
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var application = await _service.GetByIdAsync(id, userId);
 
             if (application == null)
             {
@@ -44,7 +56,14 @@ namespace JobTracker.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateJobApplicationDTO dto)
         {
-            var application = await _service.CreateAsync(dto);
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var application = await _service.CreateAsync(dto, userId);
 
             if (application == null)
             {
@@ -57,16 +76,25 @@ namespace JobTracker.Controllers
             return CreatedAtAction(
                 nameof(GetById),
                 new { id = application.Id },
-                application);
+                application
+            );
         }
 
-
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, UpdateJobApplicationDTO dto)
+        public async Task<IActionResult> Update(
+            int id,
+            UpdateJobApplicationDTO dto)
         {
-            var updated = await _service.UpdateAsync(id, dto);
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if(!updated)
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            bool updated = await _service.UpdateAsync(id, dto, userId);
+
+            if (!updated)
             {
                 return NotFound();
             }
@@ -77,14 +105,21 @@ namespace JobTracker.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var deleted = await _service.DeleteAsync(id);
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if(!deleted)
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            bool deleted = await _service.DeleteAsync(id, userId);
+
+            if (!deleted)
             {
                 return NotFound();
             }
 
             return NoContent();
-        }       
+        }
     }
 }

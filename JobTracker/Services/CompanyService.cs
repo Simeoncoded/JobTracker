@@ -14,22 +14,33 @@ namespace JobTracker.Services
             _context = context;
         }
 
-        public async Task<List<Company>> GetAllAsync()
+        public async Task<List<Company>> GetAllAsync(string userId)
         {
-            return await _context.Companies.ToListAsync();
+            return await _context.Companies
+                .Where(company => company.UserId == userId)
+                .ToListAsync();
         }
 
-        public async Task<Company?> GetByIdAsync(int id)
+        public async Task<Company?> GetByIdAsync(
+            int id,
+            string userId)
         {
-            return await _context.Companies.FindAsync(id);
+            return await _context.Companies
+                .FirstOrDefaultAsync(
+                    company =>
+                        company.Id == id &&
+                        company.UserId == userId);
         }
 
-        public async Task<Company> CreateAsync(CreateCompanyDTO dto)
+        public async Task<Company> CreateAsync(
+            CreateCompanyDTO dto,
+            string userId)
         {
-            var company = new Company
+            Company company = new Company
             {
                 Name = dto.Name,
-                Website = dto.Website
+                Website = dto.Website,
+                UserId = userId
             };
 
             _context.Companies.Add(company);
@@ -41,9 +52,14 @@ namespace JobTracker.Services
 
         public async Task<bool> UpdateAsync(
             int id,
-            UpdateCompanyDTO dto)
+            UpdateCompanyDTO dto,
+            string userId)
         {
-            var company = await _context.Companies.FindAsync(id);
+            Company? company = await _context.Companies
+                .FirstOrDefaultAsync(
+                    company =>
+                        company.Id == id &&
+                        company.UserId == userId);
 
             if (company == null)
             {
@@ -58,9 +74,15 @@ namespace JobTracker.Services
             return true;
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(
+            int id,
+            string userId)
         {
-            var company = await _context.Companies.FindAsync(id);
+            Company? company = await _context.Companies
+                .FirstOrDefaultAsync(
+                    company =>
+                        company.Id == id &&
+                        company.UserId == userId);
 
             if (company == null)
             {

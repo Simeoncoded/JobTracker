@@ -1,53 +1,59 @@
 ﻿using JobTracker.Data;
 using JobTracker.DTOs;
 using JobTracker.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace JobTracker.Services
 {
     public class JobApplicationService : IJobApplicationService
     {
-        public readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
+
         public JobApplicationService(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public async Task<List<JobApplicationResponseDTO>> GetAllAsync()
+        public async Task<List<JobApplicationResponseDTO>> GetAllAsync(string userId)
         {
-            var application = await _context.JobApplications
-                .Include(c => c.Company)
-                .ToListAsync();
+            List<JobApplication> applications =
+                await _context.JobApplications
+                    .Include(application => application.Company)
+                    .Where(application => application.UserId == userId)
+                    .ToListAsync();
 
-            return application.Select(x => new JobApplicationResponseDTO
+            return applications.Select(application => new JobApplicationResponseDTO
             {
-                Id = x.Id,
-                CompanyId = x.CompanyId,
-                CompanyName = x.Company.Name,
-                JobTitle = x.JobTitle,
-                Status = x.Status,
-                AppliedDate = x.AppliedDate,
-                JobUrl = x.JobUrl,
-                Location = x.Location,
-                Salary = x.Salary,
-                Notes = x.Notes
+                Id = application.Id,
+                CompanyId = application.CompanyId,
+                CompanyName = application.Company.Name,
+                JobTitle = application.JobTitle,
+                Status = application.Status,
+                AppliedDate = application.AppliedDate,
+                JobUrl = application.JobUrl,
+                Location = application.Location,
+                Salary = application.Salary,
+                Notes = application.Notes
             }).ToList();
         }
 
-
-
-        public async Task<JobApplicationResponseDTO?> GetByIdAsync(int id)
+        public async Task<JobApplicationResponseDTO?> GetByIdAsync(
+            int id,
+            string userId)
         {
-            var application = await _context.JobApplications
-                .Include(c => c.Company)
-                .FirstOrDefaultAsync(x => x.Id == id);
+            JobApplication? application =
+                await _context.JobApplications
+                    .Include(application => application.Company)
+                    .FirstOrDefaultAsync(
+                        application =>
+                            application.Id == id &&
+                            application.UserId == userId
+                    );
 
             if (application == null)
             {
                 return null;
             }
-
 
             return new JobApplicationResponseDTO
             {
@@ -62,21 +68,26 @@ namespace JobTracker.Services
                 Salary = application.Salary,
                 Notes = application.Notes
             };
-
         }
 
-        public async Task<JobApplication> CreateAsync(CreateJobApplicationDTO dto)
+        public async Task<JobApplication?> CreateAsync(
+            CreateJobApplicationDTO dto,
+            string userId)
         {
-            var companyExists = await _context.Companies
-         .AnyAsync(c => c.Id == dto.CompanyId);
+            bool companyExists = await _context.Companies
+       .AnyAsync(
+             company =>
+                 company.Id == dto.CompanyId &&
+                 company.UserId == userId);
 
             if (!companyExists)
             {
                 return null;
-                     
             }
-            var application = new JobApplication
+
+            JobApplication application = new JobApplication
             {
+                UserId = userId,
                 CompanyId = dto.CompanyId,
                 JobTitle = dto.JobTitle,
                 Status = dto.Status,
@@ -94,19 +105,28 @@ namespace JobTracker.Services
             return application;
         }
 
-        public async Task<bool> UpdateAsync(int id, UpdateJobApplicationDTO dto)
+        public async Task<bool> UpdateAsync(
+            int id,
+            UpdateJobApplicationDTO dto,
+            string userId)
         {
-            var application = await _context.JobApplications.FindAsync(id);
+            JobApplication? application =
+                await _context.JobApplications
+                    .FirstOrDefaultAsync(
+                        application =>
+                            application.Id == id &&
+                            application.UserId == userId
+                    );
 
-            var companyExists = await _context.Companies
-            .AnyAsync(c => c.Id == dto.CompanyId);
-
-            if (!companyExists)
+            if (application == null)
             {
                 return false;
             }
 
-            if (application == null)
+            bool companyExists = await _context.Companies
+            .AnyAsync(company =>company.Id == dto.CompanyId && company.UserId == userId);
+
+            if (!companyExists)
             {
                 return false;
             }
@@ -125,9 +145,15 @@ namespace JobTracker.Services
             return true;
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id, string userId)
         {
-            var application = await _context.JobApplications.FindAsync(id);
+            JobApplication? application =
+                await _context.JobApplications
+                    .FirstOrDefaultAsync(
+                        application =>
+                            application.Id == id &&
+                            application.UserId == userId
+                    );
 
             if (application == null)
             {

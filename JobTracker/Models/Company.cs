@@ -6,5 +6,7 @@
         public string Name { get; set; }
         public string? Website { get; set; }
         public HashSet<JobApplication> JobApplications { get; set; }= new HashSet<JobApplication>();
+        public string UserId { get; set; } = string.Empty;
+
     }
 }

@@ -1,12 +1,15 @@
 ﻿using JobTracker.DTOs;
+using JobTracker.Models;
 using JobTracker.Services;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace JobTracker.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CompaniesController : ControllerBase
     {
         private readonly ICompanyService _service;
@@ -19,7 +22,16 @@ namespace JobTracker.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var companies = await _service.GetAllAsync();
+            string? userId = User.FindFirstValue(
+                ClaimTypes.NameIdentifier);
+
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            List<Company> companies =
+                await _service.GetAllAsync(userId);
 
             return Ok(companies);
         }
@@ -27,7 +39,15 @@ namespace JobTracker.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var company = await _service.GetByIdAsync(id);
+            string? userId = User.FindFirstValue(
+                ClaimTypes.NameIdentifier);
+
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            Company? company = await _service.GetByIdAsync(id, userId);
 
             if (company == null)
             {
@@ -38,9 +58,18 @@ namespace JobTracker.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateCompanyDTO dto)
+        public async Task<IActionResult> Create(
+            CreateCompanyDTO dto)
         {
-            var company = await _service.CreateAsync(dto);
+            string? userId = User.FindFirstValue(
+                ClaimTypes.NameIdentifier);
+
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            Company company = await _service.CreateAsync(dto, userId);
 
             return CreatedAtAction(
                 nameof(GetById),
@@ -53,7 +82,15 @@ namespace JobTracker.Controllers
             int id,
             UpdateCompanyDTO dto)
         {
-            var updated = await _service.UpdateAsync(id, dto);
+            string? userId = User.FindFirstValue(
+                ClaimTypes.NameIdentifier);
+
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            bool updated = await _service.UpdateAsync(id,dto,userId);
 
             if (!updated)
             {
@@ -66,7 +103,15 @@ namespace JobTracker.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var deleted = await _service.DeleteAsync(id);
+            string? userId = User.FindFirstValue(
+                ClaimTypes.NameIdentifier);
+
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            bool deleted = await _service.DeleteAsync(id,userId);
 
             if (!deleted)
             {
