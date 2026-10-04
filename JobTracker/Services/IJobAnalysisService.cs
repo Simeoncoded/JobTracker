@@ -6,6 +6,6 @@ namespace JobTracker.Services
     public interface IJobAnalysisService
     {
         Task<List<JobAnalysis>> GetAllAsync();
-        Task<JobAnalysis> CreateAsync(CreateJobAnalysisDTO dto);
+        Task<JobAnalysisDTO> CreateAsync(CreateJobAnalysisDTO dto);
     }
 }

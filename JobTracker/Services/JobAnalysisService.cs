@@ -39,7 +39,7 @@ namespace JobTracker.Services
 
             return analyses;
         }
-        public async Task<JobAnalysis> CreateAsync(CreateJobAnalysisDTO dto)
+        public async Task<JobAnalysisDTO> CreateAsync(CreateJobAnalysisDTO dto)
         {
             string? userId =
                 _httpContextAccessor.HttpContext?
