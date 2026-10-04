@@ -57,13 +57,14 @@ builder.Services.AddCors(options =>
     options.AddPolicy("ReactPolicy", policy =>
     {
         policy
-            .WithOrigins("http://localhost:5173")
+            .WithOrigins(
+                "http://localhost:5173",
+                "https://witty-plant-04da50b0f.4.azurestaticapps.net"
+            )
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
 });
-
-builder.Services.AddControllers();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -94,7 +95,7 @@ builder.Services.AddSwaggerGen(options =>
             Array.Empty<string>()
         }
     });
-}); builder.Services.AddSwaggerGen();
+}); 
 
 builder.Services.AddScoped<IJobApplicationService, JobApplicationService>();
 builder.Services.AddScoped<ICompanyService, CompanyService>();

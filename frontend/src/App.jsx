@@ -66,6 +66,25 @@ function App() {
       })
   }, [isLoggedIn])
 
+  useEffect(() => {
+    const handleAuthLogout = () => {
+      setCompanies([])
+      setApplications([])
+      setResumes([])
+      setAnalyses([])
+      setLatestAnalysis(null)
+      setEditingApplication(null)
+  
+      setIsLoggedIn(false)
+    }
+  
+    window.addEventListener("auth:logout", handleAuthLogout)
+  
+    return () => {
+      window.removeEventListener("auth:logout", handleAuthLogout)
+    }
+  }, [])
+
   const loadApplications = () => {
     getJobApplications()
       .then((data) => {
