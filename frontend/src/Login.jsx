@@ -12,7 +12,6 @@ function Login({ onLogin, onRegister }) {
 
     try {
       await login(email, password)
-
       onLogin()
     } catch (error) {
       setError(error.message)
@@ -20,44 +19,66 @@ function Login({ onLogin, onRegister }) {
   }
 
   return (
-    <div>
-      <h1>Login</h1>
+    <div className="auth-page">
+      <div className="auth-card">
+        <h1>JobTracker</h1>
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email</label>
+        <p className="auth-subtitle">
+          Track your job applications in one place.
+        </p>
 
-          <input
-            type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            required
-          />
-        </div>
+        <h2>Welcome Back</h2>
 
-        <div>
-          <label>Password</label>
+        <form onSubmit={handleSubmit}>
+          <div className="auth-field">
+            <label>Email</label>
 
-          <input
-            type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            required
-          />
-        </div>
+            <input
+              type="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              placeholder="you@example.com"
+              required
+            />
+          </div>
 
-        <button type="submit">
-          Login
+          <div className="auth-field">
+            <label>Password</label>
+
+            <input
+              type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              placeholder="Enter your password"
+              required
+            />
+          </div>
+
+          {error && (
+            <p className="auth-error">
+              {error}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            className="auth-button"
+          >
+            Login
+          </button>
+        </form>
+
+        <p className="auth-switch">
+          Don't have an account?
+        </p>
+
+        <button
+          onClick={onRegister}
+          className="auth-link-button"
+        >
+          Create an account
         </button>
-      </form>
-
-      {error && (
-        <p>{error}</p>
-      )}
-
-      <button onClick={onRegister}>
-        Don't have an account? Create one
-      </button>
+      </div>
     </div>
   )
 }

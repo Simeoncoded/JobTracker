@@ -1,20 +1,32 @@
 import ApplicationCard from "./ApplicationCard"
 
-function ApplicationList({ applications, onApplicationDeleted, onApplicationEdit }){
-    return (
-        <div>
-      <h2>Applications</h2>
+function ApplicationList({
+  applications,
+  onApplicationDeleted,
+  onApplicationEdit
+}) {
+  return (
+    <div className="application-list">
+      <div className="application-list-header">
+        <h2>Applications</h2>
 
-      <ul>
+        <span className="count-badge">
+          {applications.length}
+        </span>
+      </div>
+
+      <div className="application-list-items">
         {applications.map((application) => (
-          <ApplicationCard key={application.id}
-          application={application}
-          onApplicationDeleted={onApplicationDeleted}
-          onApplicationEdit={onApplicationEdit}/>
+          <ApplicationCard
+            key={application.id}
+            application={application}
+            onApplicationDeleted={onApplicationDeleted}
+            onApplicationEdit={onApplicationEdit}
+          />
         ))}
-      </ul>
+      </div>
     </div>
-    )
+  )
 }
 
 export default ApplicationList

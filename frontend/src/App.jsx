@@ -12,6 +12,7 @@ import { getJobAnalyses } from "./api/jobAnalysisApi"
 import AnalysisHistory from "../components/AnalysisHistory"
 import Login from "./Login"
 import Register from "./Register"
+import CompanyForm from "../components/CompanyForm"
 import "./App.css"
 
 function App() {
@@ -27,7 +28,7 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(
     Boolean(sessionStorage.getItem("token"))
   )
-  
+
   useEffect(() => {
     if (!isLoggedIn) {
       return
@@ -84,7 +85,18 @@ function App() {
         console.error(error)
       })
   }
+  const handleLogout = () => {
+    sessionStorage.removeItem("token")
 
+    setCompanies([])
+    setApplications([])
+    setResumes([])
+    setAnalyses([])
+    setLatestAnalysis(null)
+    setEditingApplication(null)
+
+    setIsLoggedIn(false)
+  }
   const filteredApplications = applications.filter((application) => {
     const matchesStatus =
       statusFilter === "All" ||
@@ -135,7 +147,7 @@ function App() {
         />
       )
     }
-  
+
     return (
       <Login
         onLogin={() => setIsLoggedIn(true)}
@@ -146,6 +158,19 @@ function App() {
   return (
     <div className="app">
       <main className="dashboard">
+
+        <div className="dashboard-topbar">
+          <span className="dashboard-brand">
+            JobTracker
+          </span>
+
+          <button
+            className="logout-button"
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
+        </div>
 
         <section className="hero">
           <div>
@@ -163,25 +188,49 @@ function App() {
           </div>
         </section>
 
-        {/* Application Form */}
+        <section className="form-grid">
 
-        <section className="section-card">
-          <div className="section-header">
-            <div>
-              <p className="section-label">APPLICATIONS</p>
-              <h2>Add Job Application</h2>
-              <p>
-                Keep track of the jobs you're applying for.
-              </p>
+          <div className="section-card compact-form">
+            <div className="section-header">
+              <div>
+                <p className="section-label">COMPANIES</p>
+                <h2>Add Company</h2>
+                <p>
+                  Add a company you're applying to.
+                </p>
+              </div>
             </div>
+
+            <CompanyForm
+              companies={companies}
+              onCompanyCreated={(company) => {
+                setCompanies((currentCompanies) => [
+                  ...currentCompanies,
+                  company
+                ])
+              }}
+            />
           </div>
 
-          <ApplicationForm
-            companies={companies}
-            onApplicationCreated={loadApplications}
-            editingApplication={editingApplication}
-            onCancelEdit={handleCancelEdit}
-          />
+          <div className="section-card compact-form">
+            <div className="section-header">
+              <div>
+                <p className="section-label">APPLICATIONS</p>
+                <h2>Add Job Application</h2>
+                <p>
+                  Track a new job application.
+                </p>
+              </div>
+            </div>
+
+            <ApplicationForm
+              companies={companies}
+              onApplicationCreated={loadApplications}
+              editingApplication={editingApplication}
+              onCancelEdit={handleCancelEdit}
+            />
+          </div>
+
         </section>
 
         {/* Statistics */}
@@ -218,33 +267,6 @@ function App() {
             <h3>{rejectedApplications}</h3>
           </div>
 
-        </section>
-
-        {/* Companies */}
-
-        <section className="section-card">
-          <div className="section-header">
-            <div>
-              <p className="section-label">COMPANIES</p>
-              <h2>Your Companies</h2>
-            </div>
-
-            <span className="count-badge">
-              {companies.length}
-            </span>
-          </div>
-
-          <div className="company-list">
-            {companies.map((company) => (
-              <div className="company-item" key={company.id}>
-                <div className="company-avatar">
-                  {company.name.charAt(0).toUpperCase()}
-                </div>
-
-                <span>{company.name}</span>
-              </div>
-            ))}
-          </div>
         </section>
 
         {/* Applications */}
